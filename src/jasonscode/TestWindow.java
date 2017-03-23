@@ -21,6 +21,11 @@ public class TestWindow extends JFrame {
 	private JPanel contentPane;
 	private static JProgressBar progressBar;
 	private static JLabel lblPower;
+	
+	private static int powerDraws[] = {10, 50};
+	private static boolean currentStatus[];
+	private static ArrayList<JLabel> labels=new ArrayList<JLabel>();
+	
 
 	/**
 	 * Launch the application.
@@ -79,10 +84,10 @@ public class TestWindow extends JFrame {
 		
 		
 		String objectNames[] = {"Lights", "Power Supply"};
-		int powerDraws[] = {10, 50};
 		boolean initialStatus[] = {false, true};
 		
-		ArrayList<JLabel> labels=new ArrayList<JLabel>();
+		
+		currentStatus = initialStatus;
 		
 		for (int x = 0; x < objectNames.length; x++){
 			labels.add(new JLabel(objectNames[x]));
@@ -131,15 +136,29 @@ public class TestWindow extends JFrame {
 		chckbxLights.setBounds(385, 481, 129, 23);
 		contentPane.add(chckbxLights);
 		
+		*/
 		JCheckBox chckbxLifeSupport = new JCheckBox("Life Support");
 		chckbxLifeSupport.setBounds(520, 481, 129, 23);
+		chckbxLifeSupport.addChangeListener(new CheckboxListener());
 		contentPane.add(chckbxLifeSupport);
-		*/
+		
 	}
 	
 	public static void setPower(int value){
 		progressBar.setValue(value);
 		lblPower.setText("Power: " + value);
+	}
+	
+	public static void setStatus (int index, boolean isEnabled){
+		currentStatus[index] = isEnabled;
+		
+		String currentPowerDraw = "0";
+		if (isEnabled == true){
+			currentPowerDraw = Integer.toString(powerDraws[index]);
+		}
+		System.out.println(labels.size());
+		JLabel label = labels.get((index) * 3 + 2 );
+		label.setText(currentPowerDraw);
 	}
 }
 
@@ -159,6 +178,7 @@ class CheckboxListener implements ChangeListener {
 	    Object source = changeEvent.getSource();
 	     if (source instanceof JCheckBox) {
 	    	 JCheckBox checkbox = (JCheckBox) source;
+	    	 TestWindow.setStatus(0, checkbox.isSelected());
 	    	 
 	    }
 	  }
